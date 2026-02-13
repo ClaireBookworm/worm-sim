@@ -1,0 +1,477 @@
+<!-- C. elegans MuJoCo Model
+     24 segments with 96 muscles (4 strings x 24)
+     Based on BAAI WORM paper anatomy
+-->
+<mujoco model="c_elegans">
+  <compiler angle="radian" coordinate="local"/>
+
+  <option timestep="0.002" gravity="0 0 -9.81" integrator="implicit">
+    <flag warmstart="enable"/>
+  </option>
+  <!-- Low gravity to keep worm grounded, swimming approximated by low friction -->
+
+  <default>
+    <joint damping="0.5" stiffness="0.1" armature="0.01" limited="true"/>
+    <geom type="capsule" size="0.02" rgba="0.9 0.7 0.5 1" friction="0.1 0.01 0.001" density="1000"/>
+    <motor ctrllimited="true" ctrlrange="-1 1" gear="0.1"/>
+    <site size="0.005" rgba="1 0 0 0.5"/>
+  </default>
+
+  <asset>
+    <texture type="skybox" builtin="gradient" rgb1="0.3 0.5 0.7" rgb2="0 0 0" width="512" height="512"/>
+    <texture name="grid" type="2d" builtin="checker" width="512" height="512" rgb1="0.1 0.2 0.3" rgb2="0.2 0.3 0.4"/>
+    <material name="grid" texture="grid" texrepeat="8 8" reflectance="0.2"/>
+  </asset>
+
+  <worldbody>
+    <light pos="0 0 3" dir="0 0 -1" diffuse="1 1 1"/>
+    <geom name="floor" type="plane" size="5 5 0.1" pos="0 0 -0.5" material="grid"/>
+
+    <!-- Head segment (segment 0) -->
+    <body name="seg_0" pos="0 0 0">
+      <freejoint name="root"/>
+      <geom name="geom_0" fromto="0 0 0 0.04 0 0" size="0.025"/>
+      <site name="head" pos="0 0 0" size="0.01"/>
+
+      <!-- Sensory sites on head -->
+      <site name="sensor_left" pos="0.01 0.02 0" size="0.005"/>
+      <site name="sensor_right" pos="0.01 -0.02 0" size="0.005"/>
+
+      <!-- Muscle attachment sites for segment 0 -->
+      <site name="DR_0" pos="0.02 -0.015 0.015"/>
+      <site name="DL_0" pos="0.02 0.015 0.015"/>
+      <site name="VR_0" pos="0.02 -0.015 -0.015"/>
+      <site name="VL_0" pos="0.02 0.015 -0.015"/>
+
+      <!-- Segment 1 -->
+      <body name="seg_1" pos="0.04 0 0">
+        <joint name="joint_1_dv" type="hinge" axis="0 1 0" range="-0.5 0.5"/>
+        <joint name="joint_1_lr" type="hinge" axis="0 0 1" range="-0.3 0.3"/>
+        <geom name="geom_1" fromto="0 0 0 0.04 0 0" size="0.024"/>
+        <site name="DR_1" pos="0.02 -0.015 0.015"/>
+        <site name="DL_1" pos="0.02 0.015 0.015"/>
+        <site name="VR_1" pos="0.02 -0.015 -0.015"/>
+        <site name="VL_1" pos="0.02 0.015 -0.015"/>
+
+        <!-- Segment 2 -->
+        <body name="seg_2" pos="0.04 0 0">
+          <joint name="joint_2_dv" type="hinge" axis="0 1 0" range="-0.5 0.5"/>
+          <joint name="joint_2_lr" type="hinge" axis="0 0 1" range="-0.3 0.3"/>
+          <geom name="geom_2" fromto="0 0 0 0.04 0 0" size="0.024"/>
+          <site name="DR_2" pos="0.02 -0.015 0.015"/>
+          <site name="DL_2" pos="0.02 0.015 0.015"/>
+          <site name="VR_2" pos="0.02 -0.015 -0.015"/>
+          <site name="VL_2" pos="0.02 0.015 -0.015"/>
+
+          <!-- Segment 3 -->
+          <body name="seg_3" pos="0.04 0 0">
+            <joint name="joint_3_dv" type="hinge" axis="0 1 0" range="-0.5 0.5"/>
+            <joint name="joint_3_lr" type="hinge" axis="0 0 1" range="-0.3 0.3"/>
+            <geom name="geom_3" fromto="0 0 0 0.04 0 0" size="0.023"/>
+            <site name="DR_3" pos="0.02 -0.015 0.015"/>
+            <site name="DL_3" pos="0.02 0.015 0.015"/>
+            <site name="VR_3" pos="0.02 -0.015 -0.015"/>
+            <site name="VL_3" pos="0.02 0.015 -0.015"/>
+
+            <!-- Segment 4 -->
+            <body name="seg_4" pos="0.04 0 0">
+              <joint name="joint_4_dv" type="hinge" axis="0 1 0" range="-0.5 0.5"/>
+              <joint name="joint_4_lr" type="hinge" axis="0 0 1" range="-0.3 0.3"/>
+              <geom name="geom_4" fromto="0 0 0 0.04 0 0" size="0.023"/>
+              <site name="DR_4" pos="0.02 -0.015 0.015"/>
+              <site name="DL_4" pos="0.02 0.015 0.015"/>
+              <site name="VR_4" pos="0.02 -0.015 -0.015"/>
+              <site name="VL_4" pos="0.02 0.015 -0.015"/>
+
+              <!-- Segment 5 -->
+              <body name="seg_5" pos="0.04 0 0">
+                <joint name="joint_5_dv" type="hinge" axis="0 1 0" range="-0.5 0.5"/>
+                <joint name="joint_5_lr" type="hinge" axis="0 0 1" range="-0.3 0.3"/>
+                <geom name="geom_5" fromto="0 0 0 0.04 0 0" size="0.022"/>
+                <site name="DR_5" pos="0.02 -0.015 0.015"/>
+                <site name="DL_5" pos="0.02 0.015 0.015"/>
+                <site name="VR_5" pos="0.02 -0.015 -0.015"/>
+                <site name="VL_5" pos="0.02 0.015 -0.015"/>
+
+                <!-- Segment 6 -->
+                <body name="seg_6" pos="0.04 0 0">
+                  <joint name="joint_6_dv" type="hinge" axis="0 1 0" range="-0.5 0.5"/>
+                  <joint name="joint_6_lr" type="hinge" axis="0 0 1" range="-0.3 0.3"/>
+                  <geom name="geom_6" fromto="0 0 0 0.04 0 0" size="0.022"/>
+                  <site name="DR_6" pos="0.02 -0.015 0.015"/>
+                  <site name="DL_6" pos="0.02 0.015 0.015"/>
+                  <site name="VR_6" pos="0.02 -0.015 -0.015"/>
+                  <site name="VL_6" pos="0.02 0.015 -0.015"/>
+
+                  <!-- Segment 7 -->
+                  <body name="seg_7" pos="0.04 0 0">
+                    <joint name="joint_7_dv" type="hinge" axis="0 1 0" range="-0.5 0.5"/>
+                    <joint name="joint_7_lr" type="hinge" axis="0 0 1" range="-0.3 0.3"/>
+                    <geom name="geom_7" fromto="0 0 0 0.04 0 0" size="0.021"/>
+                    <site name="DR_7" pos="0.02 -0.015 0.015"/>
+                    <site name="DL_7" pos="0.02 0.015 0.015"/>
+                    <site name="VR_7" pos="0.02 -0.015 -0.015"/>
+                    <site name="VL_7" pos="0.02 0.015 -0.015"/>
+
+                    <!-- Segment 8 -->
+                    <body name="seg_8" pos="0.04 0 0">
+                      <joint name="joint_8_dv" type="hinge" axis="0 1 0" range="-0.5 0.5"/>
+                      <joint name="joint_8_lr" type="hinge" axis="0 0 1" range="-0.3 0.3"/>
+                      <geom name="geom_8" fromto="0 0 0 0.04 0 0" size="0.021"/>
+                      <site name="DR_8" pos="0.02 -0.015 0.015"/>
+                      <site name="DL_8" pos="0.02 0.015 0.015"/>
+                      <site name="VR_8" pos="0.02 -0.015 -0.015"/>
+                      <site name="VL_8" pos="0.02 0.015 -0.015"/>
+
+                      <!-- Segment 9 -->
+                      <body name="seg_9" pos="0.04 0 0">
+                        <joint name="joint_9_dv" type="hinge" axis="0 1 0" range="-0.5 0.5"/>
+                        <joint name="joint_9_lr" type="hinge" axis="0 0 1" range="-0.3 0.3"/>
+                        <geom name="geom_9" fromto="0 0 0 0.04 0 0" size="0.020"/>
+                        <site name="DR_9" pos="0.02 -0.015 0.015"/>
+                        <site name="DL_9" pos="0.02 0.015 0.015"/>
+                        <site name="VR_9" pos="0.02 -0.015 -0.015"/>
+                        <site name="VL_9" pos="0.02 0.015 -0.015"/>
+
+                        <!-- Segment 10 -->
+                        <body name="seg_10" pos="0.04 0 0">
+                          <joint name="joint_10_dv" type="hinge" axis="0 1 0" range="-0.5 0.5"/>
+                          <joint name="joint_10_lr" type="hinge" axis="0 0 1" range="-0.3 0.3"/>
+                          <geom name="geom_10" fromto="0 0 0 0.04 0 0" size="0.020"/>
+                          <site name="DR_10" pos="0.02 -0.015 0.015"/>
+                          <site name="DL_10" pos="0.02 0.015 0.015"/>
+                          <site name="VR_10" pos="0.02 -0.015 -0.015"/>
+                          <site name="VL_10" pos="0.02 0.015 -0.015"/>
+
+                          <!-- Segment 11 -->
+                          <body name="seg_11" pos="0.04 0 0">
+                            <joint name="joint_11_dv" type="hinge" axis="0 1 0" range="-0.5 0.5"/>
+                            <joint name="joint_11_lr" type="hinge" axis="0 0 1" range="-0.3 0.3"/>
+                            <geom name="geom_11" fromto="0 0 0 0.04 0 0" size="0.020"/>
+                            <site name="DR_11" pos="0.02 -0.015 0.015"/>
+                            <site name="DL_11" pos="0.02 0.015 0.015"/>
+                            <site name="VR_11" pos="0.02 -0.015 -0.015"/>
+                            <site name="VL_11" pos="0.02 0.015 -0.015"/>
+
+                            <!-- Segment 12 (middle) -->
+                            <body name="seg_12" pos="0.04 0 0">
+                              <joint name="joint_12_dv" type="hinge" axis="0 1 0" range="-0.5 0.5"/>
+                              <joint name="joint_12_lr" type="hinge" axis="0 0 1" range="-0.3 0.3"/>
+                              <geom name="geom_12" fromto="0 0 0 0.04 0 0" size="0.020"/>
+                              <site name="DR_12" pos="0.02 -0.015 0.015"/>
+                              <site name="DL_12" pos="0.02 0.015 0.015"/>
+                              <site name="VR_12" pos="0.02 -0.015 -0.015"/>
+                              <site name="VL_12" pos="0.02 0.015 -0.015"/>
+
+                              <!-- Segment 13 -->
+                              <body name="seg_13" pos="0.04 0 0">
+                                <joint name="joint_13_dv" type="hinge" axis="0 1 0" range="-0.5 0.5"/>
+                                <joint name="joint_13_lr" type="hinge" axis="0 0 1" range="-0.3 0.3"/>
+                                <geom name="geom_13" fromto="0 0 0 0.04 0 0" size="0.020"/>
+                                <site name="DR_13" pos="0.02 -0.015 0.015"/>
+                                <site name="DL_13" pos="0.02 0.015 0.015"/>
+                                <site name="VR_13" pos="0.02 -0.015 -0.015"/>
+                                <site name="VL_13" pos="0.02 0.015 -0.015"/>
+
+                                <!-- Segment 14 -->
+                                <body name="seg_14" pos="0.04 0 0">
+                                  <joint name="joint_14_dv" type="hinge" axis="0 1 0" range="-0.5 0.5"/>
+                                  <joint name="joint_14_lr" type="hinge" axis="0 0 1" range="-0.3 0.3"/>
+                                  <geom name="geom_14" fromto="0 0 0 0.04 0 0" size="0.020"/>
+                                  <site name="DR_14" pos="0.02 -0.015 0.015"/>
+                                  <site name="DL_14" pos="0.02 0.015 0.015"/>
+                                  <site name="VR_14" pos="0.02 -0.015 -0.015"/>
+                                  <site name="VL_14" pos="0.02 0.015 -0.015"/>
+
+                                  <!-- Segment 15 -->
+                                  <body name="seg_15" pos="0.04 0 0">
+                                    <joint name="joint_15_dv" type="hinge" axis="0 1 0" range="-0.5 0.5"/>
+                                    <joint name="joint_15_lr" type="hinge" axis="0 0 1" range="-0.3 0.3"/>
+                                    <geom name="geom_15" fromto="0 0 0 0.04 0 0" size="0.020"/>
+                                    <site name="DR_15" pos="0.02 -0.015 0.015"/>
+                                    <site name="DL_15" pos="0.02 0.015 0.015"/>
+                                    <site name="VR_15" pos="0.02 -0.015 -0.015"/>
+                                    <site name="VL_15" pos="0.02 0.015 -0.015"/>
+
+                                    <!-- Segment 16 -->
+                                    <body name="seg_16" pos="0.04 0 0">
+                                      <joint name="joint_16_dv" type="hinge" axis="0 1 0" range="-0.5 0.5"/>
+                                      <joint name="joint_16_lr" type="hinge" axis="0 0 1" range="-0.3 0.3"/>
+                                      <geom name="geom_16" fromto="0 0 0 0.04 0 0" size="0.019"/>
+                                      <site name="DR_16" pos="0.02 -0.015 0.015"/>
+                                      <site name="DL_16" pos="0.02 0.015 0.015"/>
+                                      <site name="VR_16" pos="0.02 -0.015 -0.015"/>
+                                      <site name="VL_16" pos="0.02 0.015 -0.015"/>
+
+                                      <!-- Segment 17 -->
+                                      <body name="seg_17" pos="0.04 0 0">
+                                        <joint name="joint_17_dv" type="hinge" axis="0 1 0" range="-0.5 0.5"/>
+                                        <joint name="joint_17_lr" type="hinge" axis="0 0 1" range="-0.3 0.3"/>
+                                        <geom name="geom_17" fromto="0 0 0 0.04 0 0" size="0.019"/>
+                                        <site name="DR_17" pos="0.02 -0.015 0.015"/>
+                                        <site name="DL_17" pos="0.02 0.015 0.015"/>
+                                        <site name="VR_17" pos="0.02 -0.015 -0.015"/>
+                                        <site name="VL_17" pos="0.02 0.015 -0.015"/>
+
+                                        <!-- Segment 18 -->
+                                        <body name="seg_18" pos="0.04 0 0">
+                                          <joint name="joint_18_dv" type="hinge" axis="0 1 0" range="-0.5 0.5"/>
+                                          <joint name="joint_18_lr" type="hinge" axis="0 0 1" range="-0.3 0.3"/>
+                                          <geom name="geom_18" fromto="0 0 0 0.04 0 0" size="0.018"/>
+                                          <site name="DR_18" pos="0.02 -0.015 0.015"/>
+                                          <site name="DL_18" pos="0.02 0.015 0.015"/>
+                                          <site name="VR_18" pos="0.02 -0.015 -0.015"/>
+                                          <site name="VL_18" pos="0.02 0.015 -0.015"/>
+
+                                          <!-- Segment 19 -->
+                                          <body name="seg_19" pos="0.04 0 0">
+                                            <joint name="joint_19_dv" type="hinge" axis="0 1 0" range="-0.5 0.5"/>
+                                            <joint name="joint_19_lr" type="hinge" axis="0 0 1" range="-0.3 0.3"/>
+                                            <geom name="geom_19" fromto="0 0 0 0.04 0 0" size="0.017"/>
+                                            <site name="DR_19" pos="0.02 -0.015 0.015"/>
+                                            <site name="DL_19" pos="0.02 0.015 0.015"/>
+                                            <site name="VR_19" pos="0.02 -0.015 -0.015"/>
+                                            <site name="VL_19" pos="0.02 0.015 -0.015"/>
+
+                                            <!-- Segment 20 -->
+                                            <body name="seg_20" pos="0.04 0 0">
+                                              <joint name="joint_20_dv" type="hinge" axis="0 1 0" range="-0.5 0.5"/>
+                                              <joint name="joint_20_lr" type="hinge" axis="0 0 1" range="-0.3 0.3"/>
+                                              <geom name="geom_20" fromto="0 0 0 0.04 0 0" size="0.016"/>
+                                              <site name="DR_20" pos="0.02 -0.015 0.015"/>
+                                              <site name="DL_20" pos="0.02 0.015 0.015"/>
+                                              <site name="VR_20" pos="0.02 -0.015 -0.015"/>
+                                              <site name="VL_20" pos="0.02 0.015 -0.015"/>
+
+                                              <!-- Segment 21 -->
+                                              <body name="seg_21" pos="0.04 0 0">
+                                                <joint name="joint_21_dv" type="hinge" axis="0 1 0" range="-0.5 0.5"/>
+                                                <joint name="joint_21_lr" type="hinge" axis="0 0 1" range="-0.3 0.3"/>
+                                                <geom name="geom_21" fromto="0 0 0 0.04 0 0" size="0.015"/>
+                                                <site name="DR_21" pos="0.02 -0.015 0.015"/>
+                                                <site name="DL_21" pos="0.02 0.015 0.015"/>
+                                                <site name="VR_21" pos="0.02 -0.015 -0.015"/>
+                                                <site name="VL_21" pos="0.02 0.015 -0.015"/>
+
+                                                <!-- Segment 22 -->
+                                                <body name="seg_22" pos="0.04 0 0">
+                                                  <joint name="joint_22_dv" type="hinge" axis="0 1 0" range="-0.5 0.5"/>
+                                                  <joint name="joint_22_lr" type="hinge" axis="0 0 1" range="-0.3 0.3"/>
+                                                  <geom name="geom_22" fromto="0 0 0 0.04 0 0" size="0.013"/>
+                                                  <site name="DR_22" pos="0.02 -0.015 0.015"/>
+                                                  <site name="DL_22" pos="0.02 0.015 0.015"/>
+                                                  <site name="VR_22" pos="0.02 -0.015 -0.015"/>
+                                                  <site name="VL_22" pos="0.02 0.015 -0.015"/>
+
+                                                  <!-- Segment 23 (tail) -->
+                                                  <body name="seg_23" pos="0.04 0 0">
+                                                    <joint name="joint_23_dv" type="hinge" axis="0 1 0" range="-0.5 0.5"/>
+                                                    <joint name="joint_23_lr" type="hinge" axis="0 0 1" range="-0.3 0.3"/>
+                                                    <geom name="geom_23" fromto="0 0 0 0.04 0 0" size="0.010"/>
+                                                    <site name="tail" pos="0.04 0 0" size="0.01"/>
+                                                    <site name="DR_23" pos="0.02 -0.010 0.010"/>
+                                                    <site name="DL_23" pos="0.02 0.010 0.010"/>
+                                                    <site name="VR_23" pos="0.02 -0.010 -0.010"/>
+                                                    <site name="VL_23" pos="0.02 0.010 -0.010"/>
+                                                  </body>
+                                                </body>
+                                              </body>
+                                            </body>
+                                          </body>
+                                        </body>
+                                      </body>
+                                    </body>
+                                  </body>
+                                </body>
+                              </body>
+                            </body>
+                          </body>
+                        </body>
+                      </body>
+                    </body>
+                  </body>
+                </body>
+              </body>
+            </body>
+          </body>
+        </body>
+      </body>
+    </body>
+
+    <!-- Food/attractor source (optional, for chemotaxis) -->
+    <body name="food" pos="2.0 0 0">
+      <geom type="sphere" size="0.05" rgba="0 1 0 0.5"/>
+    </body>
+  </worldbody>
+
+  <actuator>
+    <!-- Dorsal Right (DR) muscles - 24 actuators -->
+    <motor name="DR_0" joint="joint_1_dv" ctrllimited="true" ctrlrange="-1 1"/>
+    <motor name="DR_1" joint="joint_2_dv" ctrllimited="true" ctrlrange="-1 1"/>
+    <motor name="DR_2" joint="joint_3_dv" ctrllimited="true" ctrlrange="-1 1"/>
+    <motor name="DR_3" joint="joint_4_dv" ctrllimited="true" ctrlrange="-1 1"/>
+    <motor name="DR_4" joint="joint_5_dv" ctrllimited="true" ctrlrange="-1 1"/>
+    <motor name="DR_5" joint="joint_6_dv" ctrllimited="true" ctrlrange="-1 1"/>
+    <motor name="DR_6" joint="joint_7_dv" ctrllimited="true" ctrlrange="-1 1"/>
+    <motor name="DR_7" joint="joint_8_dv" ctrllimited="true" ctrlrange="-1 1"/>
+    <motor name="DR_8" joint="joint_9_dv" ctrllimited="true" ctrlrange="-1 1"/>
+    <motor name="DR_9" joint="joint_10_dv" ctrllimited="true" ctrlrange="-1 1"/>
+    <motor name="DR_10" joint="joint_11_dv" ctrllimited="true" ctrlrange="-1 1"/>
+    <motor name="DR_11" joint="joint_12_dv" ctrllimited="true" ctrlrange="-1 1"/>
+    <motor name="DR_12" joint="joint_13_dv" ctrllimited="true" ctrlrange="-1 1"/>
+    <motor name="DR_13" joint="joint_14_dv" ctrllimited="true" ctrlrange="-1 1"/>
+    <motor name="DR_14" joint="joint_15_dv" ctrllimited="true" ctrlrange="-1 1"/>
+    <motor name="DR_15" joint="joint_16_dv" ctrllimited="true" ctrlrange="-1 1"/>
+    <motor name="DR_16" joint="joint_17_dv" ctrllimited="true" ctrlrange="-1 1"/>
+    <motor name="DR_17" joint="joint_18_dv" ctrllimited="true" ctrlrange="-1 1"/>
+    <motor name="DR_18" joint="joint_19_dv" ctrllimited="true" ctrlrange="-1 1"/>
+    <motor name="DR_19" joint="joint_20_dv" ctrllimited="true" ctrlrange="-1 1"/>
+    <motor name="DR_20" joint="joint_21_dv" ctrllimited="true" ctrlrange="-1 1"/>
+    <motor name="DR_21" joint="joint_22_dv" ctrllimited="true" ctrlrange="-1 1"/>
+    <motor name="DR_22" joint="joint_23_dv" ctrllimited="true" ctrlrange="-1 1"/>
+    <motor name="DR_23" joint="joint_23_dv" ctrllimited="true" ctrlrange="-1 1"/>
+
+    <!-- Dorsal Left (DL) muscles - shared with DR for dorsoventral -->
+    <motor name="DL_0" joint="joint_1_dv" ctrllimited="true" ctrlrange="-1 1"/>
+    <motor name="DL_1" joint="joint_2_dv" ctrllimited="true" ctrlrange="-1 1"/>
+    <motor name="DL_2" joint="joint_3_dv" ctrllimited="true" ctrlrange="-1 1"/>
+    <motor name="DL_3" joint="joint_4_dv" ctrllimited="true" ctrlrange="-1 1"/>
+    <motor name="DL_4" joint="joint_5_dv" ctrllimited="true" ctrlrange="-1 1"/>
+    <motor name="DL_5" joint="joint_6_dv" ctrllimited="true" ctrlrange="-1 1"/>
+    <motor name="DL_6" joint="joint_7_dv" ctrllimited="true" ctrlrange="-1 1"/>
+    <motor name="DL_7" joint="joint_8_dv" ctrllimited="true" ctrlrange="-1 1"/>
+    <motor name="DL_8" joint="joint_9_dv" ctrllimited="true" ctrlrange="-1 1"/>
+    <motor name="DL_9" joint="joint_10_dv" ctrllimited="true" ctrlrange="-1 1"/>
+    <motor name="DL_10" joint="joint_11_dv" ctrllimited="true" ctrlrange="-1 1"/>
+    <motor name="DL_11" joint="joint_12_dv" ctrllimited="true" ctrlrange="-1 1"/>
+    <motor name="DL_12" joint="joint_13_dv" ctrllimited="true" ctrlrange="-1 1"/>
+    <motor name="DL_13" joint="joint_14_dv" ctrllimited="true" ctrlrange="-1 1"/>
+    <motor name="DL_14" joint="joint_15_dv" ctrllimited="true" ctrlrange="-1 1"/>
+    <motor name="DL_15" joint="joint_16_dv" ctrllimited="true" ctrlrange="-1 1"/>
+    <motor name="DL_16" joint="joint_17_dv" ctrllimited="true" ctrlrange="-1 1"/>
+    <motor name="DL_17" joint="joint_18_dv" ctrllimited="true" ctrlrange="-1 1"/>
+    <motor name="DL_18" joint="joint_19_dv" ctrllimited="true" ctrlrange="-1 1"/>
+    <motor name="DL_19" joint="joint_20_dv" ctrllimited="true" ctrlrange="-1 1"/>
+    <motor name="DL_20" joint="joint_21_dv" ctrllimited="true" ctrlrange="-1 1"/>
+    <motor name="DL_21" joint="joint_22_dv" ctrllimited="true" ctrlrange="-1 1"/>
+    <motor name="DL_22" joint="joint_23_dv" ctrllimited="true" ctrlrange="-1 1"/>
+    <motor name="DL_23" joint="joint_23_dv" ctrllimited="true" ctrlrange="-1 1"/>
+
+    <!-- Ventral Right (VR) muscles - left-right control -->
+    <motor name="VR_0" joint="joint_1_lr" ctrllimited="true" ctrlrange="-1 1"/>
+    <motor name="VR_1" joint="joint_2_lr" ctrllimited="true" ctrlrange="-1 1"/>
+    <motor name="VR_2" joint="joint_3_lr" ctrllimited="true" ctrlrange="-1 1"/>
+    <motor name="VR_3" joint="joint_4_lr" ctrllimited="true" ctrlrange="-1 1"/>
+    <motor name="VR_4" joint="joint_5_lr" ctrllimited="true" ctrlrange="-1 1"/>
+    <motor name="VR_5" joint="joint_6_lr" ctrllimited="true" ctrlrange="-1 1"/>
+    <motor name="VR_6" joint="joint_7_lr" ctrllimited="true" ctrlrange="-1 1"/>
+    <motor name="VR_7" joint="joint_8_lr" ctrllimited="true" ctrlrange="-1 1"/>
+    <motor name="VR_8" joint="joint_9_lr" ctrllimited="true" ctrlrange="-1 1"/>
+    <motor name="VR_9" joint="joint_10_lr" ctrllimited="true" ctrlrange="-1 1"/>
+    <motor name="VR_10" joint="joint_11_lr" ctrllimited="true" ctrlrange="-1 1"/>
+    <motor name="VR_11" joint="joint_12_lr" ctrllimited="true" ctrlrange="-1 1"/>
+    <motor name="VR_12" joint="joint_13_lr" ctrllimited="true" ctrlrange="-1 1"/>
+    <motor name="VR_13" joint="joint_14_lr" ctrllimited="true" ctrlrange="-1 1"/>
+    <motor name="VR_14" joint="joint_15_lr" ctrllimited="true" ctrlrange="-1 1"/>
+    <motor name="VR_15" joint="joint_16_lr" ctrllimited="true" ctrlrange="-1 1"/>
+    <motor name="VR_16" joint="joint_17_lr" ctrllimited="true" ctrlrange="-1 1"/>
+    <motor name="VR_17" joint="joint_18_lr" ctrllimited="true" ctrlrange="-1 1"/>
+    <motor name="VR_18" joint="joint_19_lr" ctrllimited="true" ctrlrange="-1 1"/>
+    <motor name="VR_19" joint="joint_20_lr" ctrllimited="true" ctrlrange="-1 1"/>
+    <motor name="VR_20" joint="joint_21_lr" ctrllimited="true" ctrlrange="-1 1"/>
+    <motor name="VR_21" joint="joint_22_lr" ctrllimited="true" ctrlrange="-1 1"/>
+    <motor name="VR_22" joint="joint_23_lr" ctrllimited="true" ctrlrange="-1 1"/>
+    <motor name="VR_23" joint="joint_23_lr" ctrllimited="true" ctrlrange="-1 1"/>
+
+    <!-- Ventral Left (VL) muscles -->
+    <motor name="VL_0" joint="joint_1_lr" gear="-0.1" ctrllimited="true" ctrlrange="-1 1"/>
+    <motor name="VL_1" joint="joint_2_lr" gear="-0.1" ctrllimited="true" ctrlrange="-1 1"/>
+    <motor name="VL_2" joint="joint_3_lr" gear="-0.1" ctrllimited="true" ctrlrange="-1 1"/>
+    <motor name="VL_3" joint="joint_4_lr" gear="-0.1" ctrllimited="true" ctrlrange="-1 1"/>
+    <motor name="VL_4" joint="joint_5_lr" gear="-0.1" ctrllimited="true" ctrlrange="-1 1"/>
+    <motor name="VL_5" joint="joint_6_lr" gear="-0.1" ctrllimited="true" ctrlrange="-1 1"/>
+    <motor name="VL_6" joint="joint_7_lr" gear="-0.1" ctrllimited="true" ctrlrange="-1 1"/>
+    <motor name="VL_7" joint="joint_8_lr" gear="-0.1" ctrllimited="true" ctrlrange="-1 1"/>
+    <motor name="VL_8" joint="joint_9_lr" gear="-0.1" ctrllimited="true" ctrlrange="-1 1"/>
+    <motor name="VL_9" joint="joint_10_lr" gear="-0.1" ctrllimited="true" ctrlrange="-1 1"/>
+    <motor name="VL_10" joint="joint_11_lr" gear="-0.1" ctrllimited="true" ctrlrange="-1 1"/>
+    <motor name="VL_11" joint="joint_12_lr" gear="-0.1" ctrllimited="true" ctrlrange="-1 1"/>
+    <motor name="VL_12" joint="joint_13_lr" gear="-0.1" ctrllimited="true" ctrlrange="-1 1"/>
+    <motor name="VL_13" joint="joint_14_lr" gear="-0.1" ctrllimited="true" ctrlrange="-1 1"/>
+    <motor name="VL_14" joint="joint_15_lr" gear="-0.1" ctrllimited="true" ctrlrange="-1 1"/>
+    <motor name="VL_15" joint="joint_16_lr" gear="-0.1" ctrllimited="true" ctrlrange="-1 1"/>
+    <motor name="VL_16" joint="joint_17_lr" gear="-0.1" ctrllimited="true" ctrlrange="-1 1"/>
+    <motor name="VL_17" joint="joint_18_lr" gear="-0.1" ctrllimited="true" ctrlrange="-1 1"/>
+    <motor name="VL_18" joint="joint_19_lr" gear="-0.1" ctrllimited="true" ctrlrange="-1 1"/>
+    <motor name="VL_19" joint="joint_20_lr" gear="-0.1" ctrllimited="true" ctrlrange="-1 1"/>
+    <motor name="VL_20" joint="joint_21_lr" gear="-0.1" ctrllimited="true" ctrlrange="-1 1"/>
+    <motor name="VL_21" joint="joint_22_lr" gear="-0.1" ctrllimited="true" ctrlrange="-1 1"/>
+    <motor name="VL_22" joint="joint_23_lr" gear="-0.1" ctrllimited="true" ctrlrange="-1 1"/>
+    <motor name="VL_23" joint="joint_23_lr" gear="-0.1" ctrllimited="true" ctrlrange="-1 1"/>
+  </actuator>
+
+  <sensor>
+    <!-- Proprioception: joint angles -->
+    <jointpos name="prop_1_dv" joint="joint_1_dv"/>
+    <jointpos name="prop_1_lr" joint="joint_1_lr"/>
+    <jointpos name="prop_2_dv" joint="joint_2_dv"/>
+    <jointpos name="prop_2_lr" joint="joint_2_lr"/>
+    <jointpos name="prop_3_dv" joint="joint_3_dv"/>
+    <jointpos name="prop_3_lr" joint="joint_3_lr"/>
+    <jointpos name="prop_4_dv" joint="joint_4_dv"/>
+    <jointpos name="prop_4_lr" joint="joint_4_lr"/>
+    <jointpos name="prop_5_dv" joint="joint_5_dv"/>
+    <jointpos name="prop_5_lr" joint="joint_5_lr"/>
+    <jointpos name="prop_6_dv" joint="joint_6_dv"/>
+    <jointpos name="prop_6_lr" joint="joint_6_lr"/>
+    <jointpos name="prop_7_dv" joint="joint_7_dv"/>
+    <jointpos name="prop_7_lr" joint="joint_7_lr"/>
+    <jointpos name="prop_8_dv" joint="joint_8_dv"/>
+    <jointpos name="prop_8_lr" joint="joint_8_lr"/>
+    <jointpos name="prop_9_dv" joint="joint_9_dv"/>
+    <jointpos name="prop_9_lr" joint="joint_9_lr"/>
+    <jointpos name="prop_10_dv" joint="joint_10_dv"/>
+    <jointpos name="prop_10_lr" joint="joint_10_lr"/>
+    <jointpos name="prop_11_dv" joint="joint_11_dv"/>
+    <jointpos name="prop_11_lr" joint="joint_11_lr"/>
+    <jointpos name="prop_12_dv" joint="joint_12_dv"/>
+    <jointpos name="prop_12_lr" joint="joint_12_lr"/>
+    <jointpos name="prop_13_dv" joint="joint_13_dv"/>
+    <jointpos name="prop_13_lr" joint="joint_13_lr"/>
+    <jointpos name="prop_14_dv" joint="joint_14_dv"/>
+    <jointpos name="prop_14_lr" joint="joint_14_lr"/>
+    <jointpos name="prop_15_dv" joint="joint_15_dv"/>
+    <jointpos name="prop_15_lr" joint="joint_15_lr"/>
+    <jointpos name="prop_16_dv" joint="joint_16_dv"/>
+    <jointpos name="prop_16_lr" joint="joint_16_lr"/>
+    <jointpos name="prop_17_dv" joint="joint_17_dv"/>
+    <jointpos name="prop_17_lr" joint="joint_17_lr"/>
+    <jointpos name="prop_18_dv" joint="joint_18_dv"/>
+    <jointpos name="prop_18_lr" joint="joint_18_lr"/>
+    <jointpos name="prop_19_dv" joint="joint_19_dv"/>
+    <jointpos name="prop_19_lr" joint="joint_19_lr"/>
+    <jointpos name="prop_20_dv" joint="joint_20_dv"/>
+    <jointpos name="prop_20_lr" joint="joint_20_lr"/>
+    <jointpos name="prop_21_dv" joint="joint_21_dv"/>
+    <jointpos name="prop_21_lr" joint="joint_21_lr"/>
+    <jointpos name="prop_22_dv" joint="joint_22_dv"/>
+    <jointpos name="prop_22_lr" joint="joint_22_lr"/>
+    <jointpos name="prop_23_dv" joint="joint_23_dv"/>
+    <jointpos name="prop_23_lr" joint="joint_23_lr"/>
+
+    <!-- Joint velocities -->
+    <jointvel name="vel_1_dv" joint="joint_1_dv"/>
+    <jointvel name="vel_1_lr" joint="joint_1_lr"/>
+    <jointvel name="vel_12_dv" joint="joint_12_dv"/>
+    <jointvel name="vel_12_lr" joint="joint_12_lr"/>
+    <jointvel name="vel_23_dv" joint="joint_23_dv"/>
+    <jointvel name="vel_23_lr" joint="joint_23_lr"/>
+
+    <!-- Head position for tracking -->
+    <framepos name="head_pos" objtype="site" objname="head"/>
+    <framequat name="head_quat" objtype="site" objname="head"/>
+
+    <!-- Tail position -->
+    <framepos name="tail_pos" objtype="site" objname="tail"/>
+  </sensor>
+</mujoco>

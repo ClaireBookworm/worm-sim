@@ -2,6 +2,9 @@
 .pyc
 .venv
 .err
+.claude
+.github
+__pycache__
 *.pkl
 *.npz
 *.npy
@@ -14,3 +17,7 @@
 *.wav
 *.ogg
 BAAIWorm/*
+models/*
+neuron/*
+test_run*
+*.pdf
