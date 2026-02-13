@@ -1,0 +1,16 @@
+.out
+.pyc
+.venv
+.err
+*.pkl
+*.npz
+*.npy
+*.png
+*.jpg
+*.jpeg
+*.gif
+*.mp4
+*.mp3
+*.wav
+*.ogg
+BAAIWorm/*
