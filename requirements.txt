@@ -1,0 +1,19 @@
+# Biophysical sim + vis
+numpy
+mujoco
+matplotlib
+
+# Jaxley neural model
+jax
+jaxley
+optax
+pandas
+scipy
+tqdm
+
+# Video recording (--save-video)
+imageio
+imageio-ffmpeg
+
+# Wiring mask (--wiring-mask, Excel)
+openpyxl
