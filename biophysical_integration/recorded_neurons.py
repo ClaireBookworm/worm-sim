@@ -28,11 +28,20 @@ from typing import Optional, Tuple
 
 PROJECT_ROOT = Path(__file__).parent.parent
 
-# Default path to Ca_traces_cell_name.txt (neuron names from Ca imaging dataset)
-# This file has tab-separated values: numbers for unlabeled columns, names for identified neurons
-DEFAULT_CA_CELL_NAMES = (
-    PROJECT_ROOT / "BAAIWorm" / "eworm_learn" / "components" / "cb2022_data" / "Ca_traces_cell_name.txt"
-)
+# Default paths to Ca_traces_cell_name.txt (neuron names from Ca imaging dataset)
+# Try NEURON components cb2022_data first, then BAAIWorm
+CA_CELL_NAMES_CANDIDATES = [
+    PROJECT_ROOT.parent.parent.parent / "davy" / "NEURON" / "components" / "cb2022_data" / "Ca_traces_cell_name.txt",
+    PROJECT_ROOT / "BAAIWorm" / "eworm_learn" / "components" / "cb2022_data" / "Ca_traces_cell_name.txt",
+]
+
+
+def _default_ca_cell_names_path() -> Optional[Path]:
+    """First existing path from candidates."""
+    for p in CA_CELL_NAMES_CANDIDATES:
+        if p.exists():
+            return p
+    return CA_CELL_NAMES_CANDIDATES[-1]  # For clearer error message
 
 # cells_id_sim and cell_name_dict from network.py load_cb2022() - kept in sync
 CELLS_ID_SIM = [
@@ -111,7 +120,7 @@ def load_recorded_neuron_indices(
         obs_idx: (n_recorded,) int64 array of network indices
         labels_sub: list of neuron names (same order as obs_idx)
     """
-    path = Path(ca_cell_names_path) if ca_cell_names_path else DEFAULT_CA_CELL_NAMES
+    path = Path(ca_cell_names_path) if ca_cell_names_path else _default_ca_cell_names_path()
     if not path.exists():
         raise FileNotFoundError(
             f"Ca_traces_cell_name.txt not found at {path}. "

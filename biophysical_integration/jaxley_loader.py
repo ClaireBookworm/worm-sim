@@ -22,14 +22,40 @@ PROJECT_ROOT = Path(__file__).parent.parent
 NEURON_DIR = PROJECT_ROOT / "neuron"
 JAXLEY_MODULE = "jaxley_worm"
 
+# Path to jaxley_worm in NEURON components (sibling to worm-sim under 002/)
+# worm-sim: .../002/claire/embodied/worm-sim
+# jaxley_worm: .../002/davy/NEURON/components/jaxley_worm
+JAXLEY_WORM_NEURON_PATH = (
+    PROJECT_ROOT.parent.parent.parent / "davy" / "NEURON" / "components" / "jaxley_worm"
+)
+
 
 def _add_jaxley_path():
-    """Add neuron/jaxley_worm to path."""
+    """Add jaxley_worm to path. Tries: JAXLEY_WORM_PATH env, NEURON components, neuron/jaxley_worm."""
+    # 1. Environment variable (for custom setups)
+    env_path = os.environ.get("JAXLEY_WORM_PATH")
+    if env_path:
+        p = Path(env_path).resolve()
+        if p.exists() and str(p) not in sys.path:
+            sys.path.insert(0, str(p))
+            return str(p)
+
+    # 2. NEURON components jaxley_worm (shared with davy/NEURON) - preferred, has full deps
+    if JAXLEY_WORM_NEURON_PATH.exists() and str(JAXLEY_WORM_NEURON_PATH) not in sys.path:
+        sys.path.insert(0, str(JAXLEY_WORM_NEURON_PATH))
+        return str(JAXLEY_WORM_NEURON_PATH)
+
+    # 3. Local neuron/jaxley_worm (e.g. symlink or vendored copy)
     p = NEURON_DIR / JAXLEY_MODULE
     if p.exists() and str(p) not in sys.path:
         sys.path.insert(0, str(p))
         sys.path.insert(0, str(NEURON_DIR))
-    return str(p)
+        return str(p)
+
+    raise ImportError(
+        "jaxley_worm not found. Set JAXLEY_WORM_PATH, or ensure "
+        "neuron/jaxley_worm exists, or that ../../davy/NEURON/components/jaxley_worm exists."
+    )
 
 
 def load_jaxley_model(

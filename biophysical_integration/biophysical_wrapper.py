@@ -177,6 +177,7 @@ def run_closed_loop(
     config=None,
     verbose: bool = False,
     save_video_path: Optional[str] = None,
+    reset_interval: Optional[int] = None,
 ) -> Dict[str, Any]:
     """
     Run closed-loop simulation with biophysical wrapper.
@@ -196,12 +197,18 @@ def run_closed_loop(
     if save_video_path:
         try:
             import imageio
+            Path(save_video_path).parent.mkdir(parents=True, exist_ok=True)
             video_writer = imageio.get_writer(save_video_path, fps=50)
         except ImportError:
             print("Warning: imageio not installed. Run: pip install imageio imageio-ffmpeg")
             save_video_path = None
 
     for step in range(n_steps):
+        # Periodic reset to prevent neural model saturation (fixed point after ~100 steps)
+        if reset_interval and step > 0 and step % reset_interval == 0:
+            wrapper.reset()
+            if verbose:
+                print(f"  [Reset neural model at step {step}]")
         muscles = wrapper.forward(state)
         state = sim.step(muscles)
 
@@ -213,9 +220,14 @@ def run_closed_loop(
             sim.render("human")
 
         if video_writer is not None:
-            frame = sim.render("rgb_array")
-            if frame is not None:
-                video_writer.append_data(frame)
+            try:
+                frame = sim.render("rgb_array")
+                if frame is not None:
+                    video_writer.append_data(frame)
+            except Exception as e:
+                video_writer.close()
+                video_writer = None
+                print(f"Video saving disabled (no display/OpenGL): {e}")
 
         if step % 100 == 0:
             msg = f"  Step {step}/{n_steps}: pos={state.head_position[:2].round(3)}, food={state.food_concentration:.3f}"

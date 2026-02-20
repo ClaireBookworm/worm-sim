@@ -63,6 +63,12 @@ class SensoryMappingConfig:
     # Prevents sharp jumps that can destabilize the model
     smoothing_alpha: float = 0.3
 
+    # Sensory noise: Jaxley was trained with white noise S ~ uniform[-0.002, 0.002].
+    # Without noise, constant S causes model to saturate to fixed point after ~100 steps.
+    # Add small noise to keep model in dynamic regime (0 = off).
+    # TODO: maybe delete if this isn't accurate 
+    sensory_noise_scale: float = 0.0015
+
 
 class HeuristicSensoryMapping:
     """
@@ -178,6 +184,15 @@ class HeuristicSensoryMapping:
         if alpha > 0:
             self._S_smoothed = alpha * self._S_smoothed + (1 - alpha) * S
             S = self._S_smoothed.copy()
+
+        # Add sensory noise to match training regime (run_jaxley_worm uses S ~ uniform[-0.002, 0.002])
+        # Prevents model from saturating to fixed point when S becomes constant
+        if cfg.sensory_noise_scale > 0:
+            noise = cfg.sensory_noise_scale * (2 * np.random.rand(self.N_SENSORY).astype(np.float32) - 1)
+            S = S + noise
+
+        # Clip to valid input range (MUST match training: ±0.002)
+        S = np.clip(S, S_INPUT_LOW, S_INPUT_HIGH).astype(np.float32)
 
         return S
 

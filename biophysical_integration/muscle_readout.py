@@ -184,6 +184,7 @@ class LinearMuscleReadout:
         return np.clip(out, 0.0, 1.0).astype(np.float32)
 
     def save(self, path: str):
+        Path(path).parent.mkdir(parents=True, exist_ok=True)
         np.savez(path, W=self.W, b=self.b)
 
     def load(self, path: str):
@@ -265,6 +266,7 @@ class MLPMuscleReadout:
         return np.clip(out.numpy(), 0.0, 1.0).astype(np.float32)
 
     def save(self, path: str):
+        Path(path).parent.mkdir(parents=True, exist_ok=True)
         torch.save(self.net.state_dict(), path)
 
     def load(self, path: str):
@@ -406,10 +408,17 @@ if __name__ == "__main__":
                         help="Filter rows with > this fraction of NaN voltages (default 0.5)")
     parser.add_argument("--resting-potential", type=float, default=-65.0,
                         help="Replace remaining NaN voltages with this value in mV (default -65.0)")
+    parser.add_argument("--early-steps", type=int, default=None,
+                        help="Use only first N steps for training (model saturates after ~100 steps; use 100-150)")
     args = parser.parse_args()
 
     voltages = np.load(args.voltages)
     muscles = np.load(args.muscles)
+    if args.early_steps is not None:
+        n_use = min(args.early_steps, len(voltages))
+        voltages = voltages[:n_use]
+        muscles = muscles[:n_use]
+        print(f"Using first {n_use} steps only (--early-steps={args.early_steps})")
     print(f"Loaded voltages {voltages.shape}, muscles {muscles.shape}")
 
     config = MuscleReadoutConfig(

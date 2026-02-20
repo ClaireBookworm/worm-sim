@@ -16,10 +16,20 @@ from typing import Optional, Tuple
 
 PROJECT_ROOT = Path(__file__).parent.parent
 
-# Default path to neuron_muscle.xlsx (biological connectivity matrix)
-DEFAULT_NEURON_MUSCLE_PATH = (
-    PROJECT_ROOT / "BAAIWorm" / "eworm_learn" / "components" / "param" / "connection" / "neuron_muscle.xlsx"
-)
+# Default paths to neuron_muscle.xlsx (biological connectivity matrix)
+# Try NEURON components / BAAIWorm locations
+NEURON_MUSCLE_CANDIDATES = [
+    PROJECT_ROOT.parent.parent.parent / "davy" / "NEURON" / "components" / "param" / "connection" / "neuron_muscle.xlsx",
+    PROJECT_ROOT / "BAAIWorm" / "eworm_learn" / "components" / "param" / "connection" / "neuron_muscle.xlsx",
+]
+
+
+def _default_neuron_muscle_path() -> Path:
+    """First existing path from candidates, else last for error message."""
+    for p in NEURON_MUSCLE_CANDIDATES:
+        if p.exists():
+            return p
+    return NEURON_MUSCLE_CANDIDATES[-1]
 
 # Muscle ordering permutation:
 # Standard biological order: DR(0-23), VR(24-47), DL(48-71), VL(72-95)
@@ -74,7 +84,7 @@ def load_neuron_muscle_mask(
         muscle_order: "worm_sim" (default) or "biological" - output mask matches this order
         path: Path to neuron_muscle.xlsx
     """
-    p = Path(path) if path else DEFAULT_NEURON_MUSCLE_PATH
+    p = Path(path) if path else _default_neuron_muscle_path()
     if not p.exists():
         return None
 

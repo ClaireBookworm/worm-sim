@@ -12,15 +12,14 @@ Usage:
   python run_biophysical_sim.py --mock --readout biophysical_integration/checkpoints/muscle_readout.npz --render
 
   # With real biophysical model (once integrated):
-  python run_biophysical_sim.py --checkpoint /path/to/ckpt_epoch_5000.pkl --readout /path/to/muscle_readout.npz\
+  python run_biophysical_sim.py --checkpoint /path/to/ckpt_epoch_5000.pkl --readout /path/to/muscle_readout.npz
 
-python run_biophysical_sim.py \
-  --checkpoint models/Onewindow_polyak_trainableinput_tbptt_voltage_corr_new2/input_trainable_voltage_biophys \
-  --net-cache models/Onewindow_polyak_trainableinput_tbptt_voltage_corr_new2/input_trainable_voltage_biophys/network_synapse_location_always_soma.pkl \
-  --checkpoint-epoch 5000 \
-  --readout biophysical_integration/checkpoints/muscle_readout.npz \
-  --render
-
+  python run_biophysical_sim.py \
+    --checkpoint models/Onewindow_polyak_trainableinput_tbptt_voltage_corr_new2/input_trainable_voltage_biophys \
+    --net-cache models/Onewindow_polyak_trainableinput_tbptt_voltage_corr_new2/input_trainable_voltage_biophys/network_synapse_location_always_soma.pkl \
+    --checkpoint-epoch 5000 \
+    --readout biophysical_integration/checkpoints/muscle_readout.npz \
+    --render
 """
 
 import argparse
@@ -67,6 +66,10 @@ def main():
     parser.add_argument("--food-z", type=float, default=0.0)
     parser.add_argument("--save-video", type=str, default=None,
                         help="Save simulation to MP4 video (e.g. output.mp4). Needs: pip install imageio imageio-ffmpeg")
+    parser.add_argument("--reset-interval", type=int, default=None,
+                        help="Reset neural model every N steps to prevent saturation (default: none). Try 80-100.")
+    parser.add_argument("--no-sensory-noise", action="store_true",
+                        help="Disable sensory noise (default: add noise to match training regime)")
     args = parser.parse_args()
 
     config = BiophysicalConfig()
@@ -89,7 +92,7 @@ def main():
     elif args.checkpoint and args.net_cache:
         try:
             from biophysical_integration.jaxley_loader import JaxleyBiophysicalRNN
-            from biophysical_integration.sensory_mapping import HeuristicSensoryMapping
+            from biophysical_integration.sensory_mapping import HeuristicSensoryMapping, SensoryMappingConfig
             biophysical_model = JaxleyBiophysicalRNN(
                 checkpoint_dir=args.checkpoint,
                 net_cache=args.net_cache,
@@ -97,7 +100,8 @@ def main():
                 ca_cell_names_path=args.ca_cell_names,
                 motor_only=args.motor_only,
             )
-            sensory_mapping = HeuristicSensoryMapping()
+            sensory_cfg = SensoryMappingConfig(sensory_noise_scale=0.0 if args.no_sensory_noise else 0.0015)
+            sensory_mapping = HeuristicSensoryMapping(config=sensory_cfg)
             print(f"Loaded Jaxley model (jaxley_worm, {biophysical_model.n_sensory} sensory neurons)")
         except Exception as e:
             raise RuntimeError(f"Failed to load Jaxley model: {e}") from e
@@ -123,6 +127,7 @@ def main():
         config=worm_config,
         verbose=args.verbose,
         save_video_path=args.save_video,
+        reset_interval=args.reset_interval,
     )
 
     # Save outputs if requested
